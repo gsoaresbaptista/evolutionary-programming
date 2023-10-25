@@ -37,8 +37,8 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
         # find the best individual
-        cdef np.ndarray best_individual = self._individuals[0][0]
-        cdef float best_value = self._individuals[0][1]
+        self.best_individual = self._individuals[0][0]
+        self.best_value = self._individuals[0][1]
 
         for i in range(self._n_individuals):
             self._individuals[i][1] = function.evaluate(self._individuals[i][0])
@@ -49,12 +49,9 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
                 self._individuals[i][3] = self._individuals[i][0]
 
                 # update best value
-                if self._individuals[i][1] < best_value:
-                    best_value = self._individuals[i][1]
-                    best_individual = self._individuals[i][0]
-
-        self.best_individual = best_individual
-        self.best_value = best_value
+                if self._individuals[i][1] < self.best_value:
+                    self.best_value = self._individuals[i][1]
+                    self.best_individual = self._individuals[i][0]
 
         for i in range(iterations):
             # update all particles

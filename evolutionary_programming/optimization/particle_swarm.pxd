@@ -1,5 +1,3 @@
-import numpy as np
-cimport numpy as np
 from .base_optimizer cimport PopulationBasedOptimizer
 
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
