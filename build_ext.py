@@ -21,9 +21,12 @@ import pathlib
 import shutil
 import numpy
 
-# if your cython code links against numpy, uncomment
-# import numpy
 
+CYTHONIZE_OPTIONS = {
+    'boundscheck': False,
+    'wraparound': False,
+    'cdivision': True,
+}
 
 # assume that the build_ext.py script is in the root directory of the package
 root_path = pathlib.Path(__file__).absolute().parent
@@ -120,7 +123,7 @@ def build(setup_kwargs):
     # so for more than one Cython extension things will need to be adapted
     setup_kwargs.update(
         {
-            "ext_modules": cythonize(list_of_ext, language_level=3),
+            "ext_modules": cythonize(list_of_ext, language_level=3, compiler_directives=CYTHONIZE_OPTIONS),
             "cmdclass": {"build_ext": ExtBuilder},
         }
     )

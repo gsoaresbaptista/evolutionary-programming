@@ -18,14 +18,14 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     ):
         super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
         self._mutation_probability = mutation_probability
+        self._children_shape = (self._n_individuals, self._n_dims)
         self._init_individuals()
 
     cpdef void _init_individuals(self) except *:
         # create individuals
         self._individuals_fits = np.full(self._n_individuals, FLT_MAX)
         self._individuals = np.random.uniform(
-            self._min_bounds, self._max_bounds,
-            (self._n_individuals, self._n_dims))
+            self._min_bounds, self._max_bounds, self._children_shape)
 
         # set the best individual, temporary
         self.best_individual = self._individuals[0]
@@ -58,10 +58,9 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         ])
 
     cpdef np.ndarray _mutation(self, np.ndarray children) except *:
-        for i in range(self._n_individuals):
-            for j in range(self._n_dims):
-                if np.random.random() <= self._mutation_probability:
-                    children[i, j] = np.random.normal(children[i, j], 1)
+        mutation_mask = np.random.random(self._children_shape) <= self._mutation_probability
+        mutation_values = np.random.normal(0, 1, self._children_shape)
+        children = children + mutation_mask * mutation_values
         return children
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
