@@ -22,4 +22,4 @@ def test_ga_optimization():
     ga = GeneticAlgorithm(individuals, dims, min_bounds, max_bounds)
     fn = RastriginFunction(dims)
     ga.optimize(1, fn)
-    assert ga.best_value < 201.7664509
+    assert ga.best_fitness < 201.7664509

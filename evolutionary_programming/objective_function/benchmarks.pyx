@@ -8,8 +8,8 @@ cdef class RastriginFunction(BaseFunction):
     def __cinit__(self, int dimension):
         self._dimension = dimension
 
-    cpdef float evaluate(self, double[:] individual) noexcept nogil:
-        cdef float value = 10 * self._dimension
+    cpdef double evaluate(self, double[:] individual) noexcept nogil:
+        cdef double value = 10 * self._dimension
 
         for i in range(self._dimension):
             value += individual[i]**2 - 10*cos(2*pi*individual[i])

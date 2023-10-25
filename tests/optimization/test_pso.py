@@ -22,4 +22,4 @@ def test_pso_optimization():
     pso = ParticleSwarm(particles, dims, min_bounds, max_bounds)
     fn = RastriginFunction(dims)
     pso.optimize(1, fn)
-    assert pso.best_value < 201.7664509
+    assert pso.best_fitness < 201.7664509

@@ -16,7 +16,7 @@ def test_rastrigin_function_creation():
 
 def test_rastrigin_function_evaluation_low_value():
     fn = RastriginFunction(3)
-    assert fn.evaluate(np.array([0, 0, 0])) == 0.0
+    assert fn.evaluate(np.array([0, 0, 0], dtype='d')) == 0.0
 
 
 def test_rastrigin_function_evaluation_high_value():

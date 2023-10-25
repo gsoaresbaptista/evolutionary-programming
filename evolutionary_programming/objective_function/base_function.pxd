@@ -1,3 +1,3 @@
 cdef class BaseFunction:
     @classmethod
-    cpdef float evaluate(self, double[:] individual) noexcept nogil
+    cpdef double evaluate(self, double[:] individual) noexcept nogil

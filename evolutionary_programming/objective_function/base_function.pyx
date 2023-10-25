@@ -2,5 +2,5 @@ cimport cython
 
 @cython.final
 cdef class BaseFunction:
-    cpdef float evaluate(self, double[:] individual) noexcept nogil:
+    cpdef double evaluate(self, double[:] individual) noexcept nogil:
         ...
