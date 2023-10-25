@@ -1,10 +1,6 @@
-import numpy as np
-cimport numpy as np
+cimport cython
 
-
-np.import_array()
-
-
+@cython.final
 cdef class BaseFunction:
-    cpdef float evaluate(self, np.ndarray individual) except *:
+    cpdef float evaluate(self, double[:] individual) noexcept nogil:
         ...

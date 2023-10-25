@@ -37,17 +37,20 @@ root_path = pathlib.Path(__file__).absolute().parent
 # SIMPLY REGISTER YOUR EXTENSIONS HERE                       #
 
 sub_packages = [
-    ('objective_function', ['base_function', 'benchmarks']),
-    ('optimization', ['base_optimizer', 'particle_swarm', 'genetic_algorithm'])
+    ("objective_function", ["base_function", "benchmarks"]),
+    ("optimization", ["base_optimizer", "particle_swarm", "genetic_algorithm"])
 ]
 
 list_of_ext = [
     Extension(
         f"evolutionary_programming.{subpackage_name}.{pyx_file}",
-        sources=[f"./evolutionary_programming/{subpackage_name}/{pyx_file}.pyx"],
-        extra_compile_args=["-O3"],
+        sources=[
+            f"./evolutionary_programming/{subpackage_name}/{pyx_file}.pyx"
+        ],
+        extra_compile_args=["-O3", "-fopenmp"],
+        extra_link_args=["-fopenmp"],
         include_dirs=[numpy.get_include()],
-        define_macros=[('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')],
+        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     )
     for subpackage_name, pyx_files in sub_packages
     for pyx_file in pyx_files

@@ -1,15 +1,17 @@
-import numpy as np
-cimport numpy as np
+cimport cython
+from cython.cimports.libc.math import cos, pi
 from .base_function cimport BaseFunction
 
-np.import_array()
 
-
+@cython.final
 cdef class RastriginFunction(BaseFunction):
     def __cinit__(self, int dimension):
         self._dimension = dimension
 
-    cpdef float evaluate(self, np.ndarray individual) except *:
-        return 10 * self._dimension + np.sum(
-            individual**2 - 10 * np.cos(2*np.pi*individual)
-        )
+    cpdef float evaluate(self, double[:] individual) noexcept nogil:
+        cdef float value = 10 * self._dimension
+
+        for i in range(self._dimension):
+            value += individual[i]**2 - 10*cos(2*pi*individual[i])
+
+        return value
