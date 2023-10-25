@@ -7,4 +7,4 @@ np.import_array()
 
 cdef class RastriginFunction(BaseFunction):
     cdef int _dimension
-    cpdef double evaluate(self, np.ndarray individual) except *
+    cpdef float evaluate(self, np.ndarray individual) except *

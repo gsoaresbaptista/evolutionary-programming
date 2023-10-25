@@ -9,7 +9,7 @@ cdef class RastriginFunction(BaseFunction):
     def __cinit__(self, int dimension):
         self._dimension = dimension
 
-    cpdef double evaluate(self, np.ndarray individual) except *:
+    cpdef float evaluate(self, np.ndarray individual) except *:
         return 10 * self._dimension + np.sum(
             individual**2 - 10 * np.cos(2*np.pi*individual)
         )

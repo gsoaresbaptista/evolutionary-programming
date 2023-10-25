@@ -6,5 +6,5 @@ np.import_array()
 
 
 cdef class BaseFunction:
-    cpdef double evaluate(self, np.ndarray individual) except *:
+    cpdef float evaluate(self, np.ndarray individual) except *:
         ...
