@@ -17,9 +17,9 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     cdef double _mutation_probability
     cdef tuple _children_shape
     cdef np.ndarray _individuals
-    cdef np.ndarray _individuals_fits
+    cdef np.ndarray _individuals_fitness
 
-    cpdef void _fit_population(self, BaseFunction function) except  *
+    cpdef void _fitness_compute(self, BaseFunction function) except  *
     cpdef np.ndarray _select_fathers(self) except *
     cpdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *
     cpdef np.ndarray _mutation(self, np.ndarray children) except *

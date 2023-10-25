@@ -8,7 +8,7 @@ np.import_array()
 
 cdef class PopulationBasedOptimizer:
     cdef readonly np.ndarray best_individual
-    cdef readonly float best_value
+    cdef readonly float best_fitness
     # does not access via python code
     cdef int _n_individuals
     cdef int _n_dims

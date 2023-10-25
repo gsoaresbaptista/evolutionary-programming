@@ -34,24 +34,29 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
         for _ in range(self._n_individuals):
             individual = np.random.uniform(self._min_bounds, self._max_bounds, self._n_dims)
             self._individuals.append([individual, DBL_MAX, velocity, individual, DBL_MAX, 0])
-
-    cpdef void optimize(self, int iterations, BaseFunction function) except *:
         # find the best individual
         self.best_individual = self._individuals[0][0]
-        self.best_value = self._individuals[0][1]
+        self.best_fitness = self._individuals[0][1]
 
+    cpdef void _fitness_compute(self, int i, BaseFunction function) except *:
+        # update particle best fitness
+        self._individuals[i][1] = function.evaluate(self._individuals[i][0])
+
+        if self._individuals[i][1] < self._individuals[i][4]:
+            self._individuals[i][5] = 0
+            self._individuals[i][4] = self._individuals[i][1]
+            self._individuals[i][3] = self._individuals[i][0]
+
+            # update best value
+            if self._individuals[i][1] < self.best_fitness:
+                self.best_fitness = self._individuals[i][1]
+                self.best_individual = self._individuals[i][0]
+        else:
+            self._individuals[i][5] += 1
+
+    cpdef void optimize(self, int iterations, BaseFunction function) except *:
         for i in range(self._n_individuals):
-            self._individuals[i][1] = function.evaluate(self._individuals[i][0])
-
-            # update particle best fitness
-            if self._individuals[i][1] < self._individuals[i][4]:
-                self._individuals[i][4] = self._individuals[i][1]
-                self._individuals[i][3] = self._individuals[i][0]
-
-                # update best value
-                if self._individuals[i][1] < self.best_value:
-                    self.best_value = self._individuals[i][1]
-                    self.best_individual = self._individuals[i][0]
+            self._fitness_compute(i, function)
 
         for i in range(iterations):
             # update all particles
@@ -79,19 +84,6 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
                         self._individuals[j][3] * (1 + 1.1 * (2*self._cj - 1)),
                         self._min_bounds, self._max_bounds)
 
-                # update particle best fitness
-                self._individuals[j][1] = function.evaluate(self._individuals[j][0])
+                self._fitness_compute(j, function)
 
-                if self._individuals[j][1] < self._individuals[j][4]:
-                    self._individuals[j][5] = 0
-                    self._individuals[j][4] = self._individuals[j][1]
-                    self._individuals[j][3] = self._individuals[j][0]
-
-                    # update best value
-                    if self._individuals[j][1] < self.best_value:
-                        self.best_value = self._individuals[j][1]
-                        self.best_individual = self._individuals[j][0]
-                else:
-                    self._individuals[j][5] += 1
-
-            print(f'[{i+1}] current min value: {self.best_value}')
+            print(f'[{i+1}] current min value: {self.best_fitness}')

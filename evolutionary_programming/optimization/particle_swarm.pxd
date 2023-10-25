@@ -17,4 +17,5 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
     cdef double _inertia
     cdef list _individuals
 
+    cpdef void _fitness_compute(self, int i, BaseFunction function) except *
     cpdef void optimize(self, int iterations, BaseFunction function) except *

@@ -1,6 +1,6 @@
 import numpy as np
 cimport numpy as np
-from cython.parallel import prange
+from cython.parallel cimport prange
 from .base_optimizer cimport PopulationBasedOptimizer
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
 
@@ -24,15 +24,14 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
 
     cpdef void _init_individuals(self) except *:
         # create individuals
-        self._individuals_fits = np.full(self._n_individuals, DBL_MAX)
+        self._individuals_fitness = np.full(self._n_individuals, DBL_MAX)
         self._individuals = np.random.uniform(
             self._min_bounds, self._max_bounds, self._children_shape)
-
         # set the best individual, temporary
         self.best_individual = self._individuals[0]
-        self.best_value = self._individuals_fits[0]
+        self.best_fitness = self._individuals_fitness[0]
 
-    cpdef void _fit_population(self, BaseFunction function) except *:
+    cpdef void _fitness_compute(self, BaseFunction function) except *:
         cdef int i
         cdef double fitness
         cdef double[:, :] individuals = self._individuals
@@ -41,9 +40,9 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
             fitness = function.evaluate(individuals[i])
             with gil:
                 # update particle best fitness
-                self._individuals_fits[i] = fitness
-                if fitness < self.best_value:
-                    self.best_value = fitness
+                self._individuals_fitness[i] = fitness
+                if fitness < self.best_fitness:
+                    self.best_fitness = fitness
                     self.best_individual = self._individuals[i]
 
     cpdef np.ndarray _select_fathers(self) except *:
@@ -52,7 +51,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         fathers_1 = np.random.choice(self._n_individuals, self._n_individuals//2)
         return self._individuals[
             np.where(
-                self._individuals_fits[fathers_0] < self._individuals_fits[fathers_1],
+                self._individuals_fitness[fathers_0] < self._individuals_fitness[fathers_1],
                 fathers_0, fathers_1
             )
         ]
@@ -71,12 +70,12 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         return children
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
-        self._fit_population(function)
+        self._fitness_compute(function)
 
         for i in range(iterations):
             # create new individuals
             children = self._crossover(self._select_fathers(), self._select_fathers())
             children = self._mutation(children)
             self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
-            self._fit_population(function)
-            print(f'[{i+1}] current min value: {self.best_value}')
+            self._fitness_compute(function)
+            print(f'[{i+1}] current min value: {self.best_fitness}')
