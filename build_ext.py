@@ -35,7 +35,7 @@ root_path = pathlib.Path(__file__).absolute().parent
 
 sub_packages = [
     ('objective_function', ['base_function', 'benchmarks']),
-    ('optimization', ['particle_swarm'])
+    ('optimization', ['base_optimizer', 'particle_swarm'])
 ]
 
 list_of_ext = [

@@ -1,0 +1,27 @@
+import numpy as np
+cimport numpy as np
+from evolutionary_programming.objective_function.base_function cimport BaseFunction
+
+
+np.import_array()
+
+
+cdef class PopulationBasedOptimizer:
+    def __cinit__(
+        self,
+        int n_individuals,
+        int n_dims,
+        list min_bounds,
+        list max_bounds,
+    ) -> None:
+        self._n_individuals = n_individuals
+        self._n_dims = n_dims
+        self._min_bounds = min_bounds
+        self._max_bounds = max_bounds
+        self._individuals = []
+
+    cpdef void _init_individuals(self) except *:
+        ...
+
+    cpdef void optimize(self, int iterations, BaseFunction function) except *:
+        ...
