@@ -1,5 +1,13 @@
-from evolutionary_programming.optimization import ParticleSwarm
+from evolutionary_programming.optimization import (
+    ParticleSwarm,
+    PopulationBasedOptimizer,
+)
 from evolutionary_programming.objective_function import RastriginFunction
+
+
+def test_pso_inheritance():
+    pso = ParticleSwarm(1, 1, [-1], [1])
+    assert isinstance(pso, PopulationBasedOptimizer)
 
 
 def test_pso_creation():
