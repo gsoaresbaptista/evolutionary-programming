@@ -4,17 +4,17 @@ from evolutionary_programming.objective_function.base_function cimport BaseFunct
 
 
 cdef extern from "float.h":
-    const float FLT_MAX
+    const double DBL_MAX
 
 
 cdef class ParticleSwarm(PopulationBasedOptimizer):
     # does not access via python code
     cdef int _max_stagnation_interval
-    cdef float _scaling_factor
-    cdef float _cj
-    cdef float _cognitive
-    cdef float _social
-    cdef float _inertia
+    cdef double _scaling_factor
+    cdef double _cj
+    cdef double _cognitive
+    cdef double _social
+    cdef double _inertia
     cdef list _individuals
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *

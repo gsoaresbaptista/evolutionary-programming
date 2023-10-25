@@ -14,7 +14,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         int n_dims,
         list min_bounds,
         list max_bounds,
-        float mutation_probability = 0.01,
+        double mutation_probability = 0.01,
     ):
         super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
         self._mutation_probability = mutation_probability
@@ -23,7 +23,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
 
     cpdef void _init_individuals(self) except *:
         # create individuals
-        self._individuals_fits = np.full(self._n_individuals, FLT_MAX)
+        self._individuals_fits = np.full(self._n_individuals, DBL_MAX)
         self._individuals = np.random.uniform(
             self._min_bounds, self._max_bounds, self._children_shape)
 

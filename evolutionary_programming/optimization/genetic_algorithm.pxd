@@ -9,12 +9,12 @@ np.import_array()
 
 
 cdef extern from "float.h":
-    const float FLT_MAX
+    const double DBL_MAX
 
 
 cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     # does not access via python code
-    cdef float _mutation_probability
+    cdef double _mutation_probability
     cdef tuple _children_shape
     cdef np.ndarray _individuals
     cdef np.ndarray _individuals_fits

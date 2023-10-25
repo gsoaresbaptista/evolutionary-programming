@@ -13,11 +13,11 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
         int n_dims,
         list min_bounds,
         list max_bounds,
-        float cognitive = 0.5,
-        float social = 0.5,
-        float inertia = 0.8,
+        double cognitive = 0.5,
+        double social = 0.5,
+        double inertia = 0.8,
         int max_stagnation_interval = 5,
-        float scaling_factor = 1.1,
+        double scaling_factor = 1.1,
     ):
         super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
         self._cognitive = cognitive
@@ -30,11 +30,10 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
     cpdef void _init_individuals(self) except *:
         self._individuals = []
-        cdef float value = FLT_MAX
         cdef np.ndarray velocity = np.zeros(self._n_dims)
         for _ in range(self._n_individuals):
             individual = np.random.uniform(self._min_bounds, self._max_bounds, self._n_dims)
-            self._individuals.append([individual, value, velocity, individual, value, 0])
+            self._individuals.append([individual, DBL_MAX, velocity, individual, DBL_MAX, 0])
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
         # find the best individual
