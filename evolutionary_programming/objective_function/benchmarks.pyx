@@ -11,5 +11,5 @@ cdef class RastriginFunction(BaseFunction):
 
     cpdef double evaluate(self, np.ndarray individual) except *:
         return 10 * self._dimension + np.sum(
-            individual**2 - 10 * np.cos(np.deg2rad(2*np.pi*individual))
+            individual**2 - 10 * np.cos(2*np.pi*individual)
         )
