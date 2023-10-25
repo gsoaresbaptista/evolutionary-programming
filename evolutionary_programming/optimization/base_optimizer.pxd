@@ -14,7 +14,6 @@ cdef class PopulationBasedOptimizer:
     cdef int _n_dims
     cdef list _min_bounds
     cdef list _max_bounds
-    cdef list _individuals
 
     @classmethod
     cpdef void _init_individuals(self) except *

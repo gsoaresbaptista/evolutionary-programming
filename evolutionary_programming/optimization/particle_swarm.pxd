@@ -15,5 +15,6 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
     cdef float _cognitive
     cdef float _social
     cdef float _inertia
+    cdef list _individuals
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *

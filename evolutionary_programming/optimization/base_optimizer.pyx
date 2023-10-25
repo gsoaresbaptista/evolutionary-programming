@@ -18,7 +18,6 @@ cdef class PopulationBasedOptimizer:
         self._n_dims = n_dims
         self._min_bounds = min_bounds
         self._max_bounds = max_bounds
-        self._individuals = []
 
     cpdef void _init_individuals(self) except *:
         ...

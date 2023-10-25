@@ -29,6 +29,7 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
         self._init_individuals()
 
     cpdef void _init_individuals(self) except *:
+        self._individuals = []
         cdef float value = FLT_MAX
         cdef np.ndarray velocity = np.zeros(self._n_dims)
         for _ in range(self._n_individuals):

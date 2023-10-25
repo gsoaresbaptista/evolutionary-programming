@@ -1,0 +1,76 @@
+import numpy as np
+cimport numpy as np
+from .base_optimizer cimport PopulationBasedOptimizer
+from evolutionary_programming.objective_function.base_function cimport BaseFunction
+
+
+np.import_array()
+
+
+cdef class GeneticAlgorithm(PopulationBasedOptimizer):
+    def __cinit__(
+        self,
+        int n_individuals,
+        int n_dims,
+        list min_bounds,
+        list max_bounds,
+        float mutation_probability = 0.01,
+    ):
+        super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
+        self._mutation_probability = mutation_probability
+        self._init_individuals()
+
+    cpdef void _init_individuals(self) except *:
+        # create individuals
+        self._individuals_fits = np.full(self._n_individuals, FLT_MAX)
+        self._individuals = np.random.uniform(
+            self._min_bounds, self._max_bounds,
+            (self._n_individuals, self._n_dims))
+
+        # set the best individual, temporary
+        self.best_individual = self._individuals[0]
+        self.best_value = self._individuals_fits[0]
+
+    cpdef void _fit_population(self, BaseFunction function) except *:
+        for i in range(self._n_individuals):
+            self._individuals_fits[i] = function.evaluate(self._individuals[i])
+            # update particle best fitness
+            if self._individuals_fits[i] < self.best_value:
+                self.best_value = self._individuals_fits[i]
+                self.best_individual = self._individuals[i]
+
+    cpdef np.ndarray _select_fathers(self) except *:
+        # randomly select fathers
+        fathers_0 = np.random.choice(self._n_individuals, self._n_individuals//2)
+        fathers_1 = np.random.choice(self._n_individuals, self._n_individuals//2)
+        return self._individuals[
+            np.where(
+                self._individuals_fits[fathers_0] < self._individuals_fits[fathers_1],
+                fathers_0, fathers_1
+            )
+        ]
+
+    cpdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *:
+        beta = np.random.random((self._n_individuals//2, self._n_dims))
+        return np.concatenate([
+            beta * fathers_a + (1 - beta) * fathers_b,
+            (1 - beta) * fathers_a + beta * fathers_b,
+        ])
+
+    cpdef np.ndarray _mutation(self, np.ndarray children) except *:
+        for i in range(self._n_individuals):
+            for j in range(self._n_dims):
+                if np.random.random() <= self._mutation_probability:
+                    children[i, j] = np.random.normal(children[i, j], 1)
+        return children
+
+    cpdef void optimize(self, int iterations, BaseFunction function) except *:
+        self._fit_population(function)
+
+        for i in range(iterations):
+            # create new individuals
+            children = self._crossover(self._select_fathers(), self._select_fathers())
+            children = self._mutation(children)
+            self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
+            self._fit_population(function)
+            print(f'[{i+1}] current min value: {self.best_value}')
