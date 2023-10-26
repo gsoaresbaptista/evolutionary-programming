@@ -1,14 +1,12 @@
-cimport cython
-from cython.cimports.libc.math import cos, pi
+from libc.math cimport cos, pi
 from .base_function cimport BaseFunction
 
 
-@cython.final
 cdef class RastriginFunction(BaseFunction):
     def __cinit__(self, int dimension):
         self._dimension = dimension
 
-    cpdef double evaluate(self, double[:] individual) noexcept nogil:
+    cpdef double evaluate(self, double[:] individual) noexcept:
         cdef double value = 10 * self._dimension
 
         for i in range(self._dimension):

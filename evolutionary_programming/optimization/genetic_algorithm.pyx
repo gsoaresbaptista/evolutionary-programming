@@ -1,6 +1,5 @@
 import numpy as np
 cimport numpy as np
-from cython.parallel cimport prange
 from .base_optimizer cimport PopulationBasedOptimizer
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
 
@@ -32,18 +31,14 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         self.best_fitness = self._individuals_fitness[0]
 
     cpdef void _fitness_compute(self, BaseFunction function) except *:
-        cdef int i
-        cdef double fitness
         cdef double[:, :] individuals = self._individuals
 
-        for i in prange(self._n_individuals, nogil=True):
-            fitness = function.evaluate(individuals[i])
-            with gil:
-                # update particle best fitness
-                self._individuals_fitness[i] = fitness
-                if fitness < self.best_fitness:
-                    self.best_fitness = fitness
-                    self.best_individual = self._individuals[i]
+        for i in range(self._n_individuals):
+            self._individuals_fitness[i] = function.evaluate(individuals[i])
+            # update particle best fitness
+            if self._individuals_fitness[i] < self.best_fitness:
+                self.best_fitness = self._individuals_fitness[i]
+                self.best_individual = self._individuals[i]
 
     cpdef np.ndarray _select_fathers(self) except *:
         # randomly select fathers

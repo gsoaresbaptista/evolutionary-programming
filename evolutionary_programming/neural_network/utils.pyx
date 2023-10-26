@@ -1,7 +1,7 @@
 import numpy as np
 cimport numpy as np
 from numpy cimport ndarray
-from cython.cimports.libc.math import ceil
+from libc.math cimport ceil
 
 
 np.import_array()

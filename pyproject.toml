@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evolutionary-programming"
-version = "0.3.1"
+version = "0.3.2"
 description = ""
 authors = ["Gabriel Soares Baptista <gsoaresbaptista@gmail.com>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ readme = "README.md"
 build = 'build_ext.py'
 
 [tool.poetry.dependencies]
-python = ">=3.11,<4.0"
+python = ">=3.11,<3.12"
 numpy = "^1.26.1"
 
 [tool.taskipy.tasks]

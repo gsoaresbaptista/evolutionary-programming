@@ -18,6 +18,7 @@ from setuptools.extension import Extension
 from setuptools.dist import Distribution
 from setuptools.errors import *
 import os
+import sys
 import pathlib
 import shutil
 import numpy
@@ -54,15 +55,21 @@ sub_packages = [
     ("neural_network", ["activation_functions", "loss_functions", "network", "regularization", "utils"]),
 ]
 
+if sys.platform.startswith("win"):
+    openmp_arg = '/openmp'
+else:
+    openmp_arg = '-fopenmp'
+
 list_of_ext = [
     Extension(
         f"evolutionary_programming.{subpackage_name}.{pyx_file}",
         sources=[
             f"./evolutionary_programming/{subpackage_name}/{pyx_file}.pyx"
         ],
-        extra_compile_args=["-march=native", "-O3", "-fopenmp", "-ffast-math"],
-        extra_link_args=["-fopenmp"],
+        extra_compile_args=["-march=native", "-O3", openmp_arg, "-ffast-math"],
+        extra_link_args=[openmp_arg, "-lm"],
         include_dirs=[numpy.get_include()],
+        libraries=["m"],  # Unix-like specific
         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
         cython_directives=EXTENSIONS_DIRECTIVES,
     )
