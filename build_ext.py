@@ -38,7 +38,8 @@ root_path = pathlib.Path(__file__).absolute().parent
 
 sub_packages = [
     ("objective_function", ["base_function", "benchmarks"]),
-    ("optimization", ["base_optimizer", "particle_swarm", "genetic_algorithm"])
+    ("optimization", ["base_optimizer", "particle_swarm", "genetic_algorithm"]),
+    ("neural_network", ["activation_functions", "loss_functions", "network", "regularization", "utils"]),
 ]
 
 list_of_ext = [
