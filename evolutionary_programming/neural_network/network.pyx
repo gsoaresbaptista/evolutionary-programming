@@ -14,6 +14,9 @@ np.import_array()
 
 
 cdef class DenseLayer:
+    """
+    TESTE 2
+    """
     def __init__(
         self,
         int input_size,
@@ -51,6 +54,21 @@ cdef class DenseLayer:
         self._population_mean = np.zeros((1, output_size))
         self._population_var = np.zeros((1, output_size))
         self._batch_norm_cache = []
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        layer = cls.__new__(cls)
+        layer._weights = deepcopy(self._weights)
+        layer._biases = deepcopy(self._biases)
+        layer._gamma = deepcopy(self._gamma)
+        layer._beta = deepcopy(self._beta)
+        layer._activation = self._activation
+        layer._regularization = self._regularization
+        layer._regularization_strength = self._regularization_strength
+        layer._dropout_probability = self._dropout_probability
+        layer._batch_norm = self._batch_norm
+        layer._batch_decay = self._batch_decay
+        return layer
 
 
 cdef class NeuralNetwork:
@@ -204,7 +222,7 @@ cdef class NeuralNetwork:
                 self._backpropagation(y_batch, y_pred)
 
             # check early stop
-            loss_val = self._loss_function(y_val, self.predict(x_val), derivative=False).sum()
+            loss_val = self._loss_function(y_val, self.predict(x_val), derivative=False)[0]
 
             if loss_val < self._best_loss:
                 self._best_model = deepcopy(self._layers)
@@ -225,12 +243,12 @@ cdef class NeuralNetwork:
                         * layer._regularization(layer._weights, derivative=False)
                         for layer in self._layers
                     ]
-                ).sum()
+                )
 
                 # compute train loss
                 loss_train = self._loss_function(
                     y_train, self.predict(x_train), derivative=False
-                ).sum()
+                )[0]
 
                 # get information to format output
                 d_length = len(str(epochs))
@@ -244,6 +262,11 @@ cdef class NeuralNetwork:
 
         # restore initial settings
         self._learning_rate = learning_rate
+
+    cpdef double evaluate(self, np.ndarray x, np.ndarray y, str loss_name = None) except *:
+        loss_fn = self._loss_function if loss_name is None else LOSS_FUNCTIONS.get(loss_name)
+        y_hat = self.predict(x)
+        return loss_fn(y, y_hat, derivative=False)[0]
 
 
 cpdef np.ndarray batch_normalization_forward(DenseLayer layer, np.ndarray x, bint training = True) except *:

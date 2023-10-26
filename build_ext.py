@@ -10,6 +10,7 @@ Copyright 2023 Richard Hartmann
 BSD (3 clause) License
 """
 
+from Cython.Compiler import Options
 from Cython.Build import cythonize
 import argparse
 from setuptools.command.build_ext import build_ext
@@ -22,10 +23,21 @@ import shutil
 import numpy
 
 
+Options.docstring = True
+
+
 CYTHONIZE_OPTIONS = {
-    'boundscheck': False,
-    'wraparound': False,
-    'cdivision': True,
+    "boundscheck": False,
+    "wraparound": False,
+    "cdivision": True,
+    "cpow": True,
+    "profile": False,
+    "linetrace": False,
+    "embedsignature": True,
+}
+
+EXTENSIONS_DIRECTIVES = {
+    "embedsignature": True,
 }
 
 # assume that the build_ext.py script is in the root directory of the package
@@ -48,10 +60,11 @@ list_of_ext = [
         sources=[
             f"./evolutionary_programming/{subpackage_name}/{pyx_file}.pyx"
         ],
-        extra_compile_args=["-O3", "-fopenmp"],
+        extra_compile_args=["-march=native", "-O3", "-fopenmp", "-ffast-math"],
         extra_link_args=["-fopenmp"],
         include_dirs=[numpy.get_include()],
         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
+        cython_directives=EXTENSIONS_DIRECTIVES,
     )
     for subpackage_name, pyx_files in sub_packages
     for pyx_file in pyx_files
