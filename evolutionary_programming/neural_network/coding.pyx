@@ -40,7 +40,7 @@ cpdef NeuralNetwork decode_neural_network(
 
         # add layer to network
         module.add_layer(DenseLayer(y, x, activation))
-        module._layers[len(module) - 1]._weights = weights
-        module._layers[len(module) - 1]._biases = biases
+        module._layers[len(module._layers) - 1]._weights = weights
+        module._layers[len(module._layers) - 1]._biases = biases
 
     return module

@@ -1,10 +1,10 @@
 from .base_function import BaseFunction
 from .benchmarks import RastriginFunction
-from .neural_network import MeanSquaredErrorForNN
+from .neural_network import RootMeanSquaredErrorForNN
 
 
 __all__ = [
     'BaseFunction',
     'RastriginFunction',
-    'MeanSquaredErrorForNN',
+    'RootMeanSquaredErrorForNN',
 ]

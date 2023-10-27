@@ -4,7 +4,7 @@ from .base_function cimport BaseFunction
 from evolutionary_programming.neural_network.coding cimport decode_neural_network
 
 
-cdef class MeanSquaredErrorForNN(BaseFunction):
+cdef class RootMeanSquaredErrorForNN(BaseFunction):
     def __init__(
         self,
         np.ndarray x_data,
