@@ -15,6 +15,7 @@ generate-setup-file = false
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
 numpy = "^1.26.1"
+requests = "^2.31.0"
 
 [tool.taskipy.tasks]
 build = "python build.py && poetry build"
