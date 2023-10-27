@@ -8,7 +8,6 @@ cdef class RastriginFunction(BaseFunction):
         self._dimension = dimension
 
     cpdef double evaluate(self, np.ndarray individual) noexcept:
-        return (
-            10 * self._dimension +
-            individual**2 - 10*np.cos(2*np.pi*individual)
-        ).sum()
+        return 10 * self._dimension + np.sum(
+            individual**2 - 10 * np.cos(2*np.pi*individual)
+        )

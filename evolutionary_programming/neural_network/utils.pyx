@@ -1,7 +1,6 @@
 import numpy as np
 cimport numpy as np
 from numpy cimport ndarray
-from libc.math cimport ceil
 
 
 cdef dict[str, WeightInitializer] WEIGHT_INITIALIZERS = {
@@ -15,7 +14,7 @@ cdef dict[str, WeightInitializer] WEIGHT_INITIALIZERS = {
 
 def batch_sequential(np.ndarray x, np.ndarray y, int batch_size = -1):
     cdef int batch_length = x.shape[0] if batch_size == -1 else batch_size
-    cdef int n_batches = int(ceil(x.shape[0] / batch_length))
+    cdef int n_batches = int(np.ceil(x.shape[0] / batch_length))
     cdef int offset = 0
     # iterate over data
     for i in range(n_batches):

@@ -48,12 +48,12 @@ root_path = pathlib.Path(__file__).absolute().parent
 
 sub_packages = [
     ("objective_function", [
-        "base_function", "benchmarks"]),
+        "base_function", "benchmarks", "neural_network"]),
     ("optimization", [
         "base_optimizer", "particle_swarm", "genetic_algorithm"]),
     ("neural_network", [
         "activation_functions", "loss_functions", "network",
-        "regularization", "utils"]),
+        "regularization", "utils", "coding"]),
     ("data_processing", [
         "scalers", "data_utils", "dataset"]),
 ]
@@ -71,9 +71,8 @@ list_of_ext = [
             f"./evolutionary_programming/{subpackage_name}/{pyx_file}.pyx"
         ],
         extra_compile_args=["-march=native", "-O3", openmp_arg, "-ffast-math"],
-        extra_link_args=[openmp_arg, "-lm"],
+        extra_link_args=[openmp_arg],
         include_dirs=[numpy.get_include()],
-        libraries=["m"],  # Unix-like specific
         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     )
     for subpackage_name, pyx_files in sub_packages
