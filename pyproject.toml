@@ -17,9 +17,12 @@ python = ">=3.11,<3.12"
 numpy = "^1.26.1"
 
 [tool.taskipy.tasks]
-clear = "find evolutionary_programming/ -type f \\( -iname \\*.c -o -iname \\*.cpp -o -iname \\*.pyd -o -iname \\*.so \\) -delete; rm -rf build/ dist/"
 build = "python build.py && poetry build"
 test =  "pytest tests --verbose"
+clear = """
+find evolutionary_programming/ -type f \\( -iname \\*.c -o -iname *.cpp -o \
+-iname \\*.pyd -o -iname \\*.so \\) -delete; rm -rf build/ dist/
+"""
 
 [tool.poetry.group.dev.dependencies]
 cython = "^3.0.4"

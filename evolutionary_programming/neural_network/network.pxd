@@ -81,6 +81,7 @@ cpdef NeuralNetwork _rebuild_neural_network(
     str loss_function, double momentum, int patience, list[DenseLayer] layers
 ) except *
 
+
 cpdef DenseLayer _rebuild_dense_layer(
     int input_size, int output_size,
     str activation,

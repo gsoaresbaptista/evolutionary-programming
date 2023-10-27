@@ -11,6 +11,7 @@ ctypedef ndarray (*LossFunction)(ndarray, ndarray, bint) except *
 
 cdef dict[str, LossFunction] LOSS_FUNCTIONS
 
+
 cdef ndarray neg_log_likelihood(ndarray y, ndarray y_hat, bint derivative) except *
 
 
