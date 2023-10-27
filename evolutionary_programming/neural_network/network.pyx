@@ -366,7 +366,7 @@ cdef class NeuralNetwork:
                 self._backpropagation(y_batch, y_pred)
 
             # check early stop
-            loss_val = self._loss_function_fn(y_val, self.predict(x_val), derivative=False)[0]
+            loss_val = self._loss_function_fn(y_val, self.predict(x_val), derivative=False).item()
 
             if loss_val < self._best_loss:
                 self._best_model = deepcopy(self._layers)
@@ -392,7 +392,7 @@ cdef class NeuralNetwork:
                 # compute train loss
                 loss_train = self._loss_function_fn(
                     y_train, self.predict(x_train), derivative=False
-                )[0]
+                ).item()
 
                 # get information to format output
                 d_length = len(str(epochs))
@@ -407,7 +407,7 @@ cdef class NeuralNetwork:
     cpdef double evaluate(self, np.ndarray x, np.ndarray y, str loss_name = None) except *:
         loss_fn = self._loss_function_fn if loss_name is None else LOSS_FUNCTIONS.get(loss_name)
         y_hat = self.predict(x)
-        return loss_fn(y, y_hat, derivative=False)[0]
+        return loss_fn(y, y_hat, derivative=False).item()
 
 
 cdef np.ndarray _batch_normalization_forward(DenseLayer layer, np.ndarray x, bint training = True) except *:
