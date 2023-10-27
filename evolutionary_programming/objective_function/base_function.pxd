@@ -1,3 +1,6 @@
+import numpy as np
+cimport numpy as np
+
+
 cdef class BaseFunction:
-    @classmethod
-    cpdef double evaluate(self, double[:] individual) noexcept
+    cpdef double evaluate(self, np.ndarray individual) noexcept

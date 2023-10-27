@@ -1,4 +1,5 @@
-from libc.math cimport cos, pi
+import numpy as np
+cimport numpy as np
 from .base_function cimport BaseFunction
 
 
@@ -6,10 +7,8 @@ cdef class RastriginFunction(BaseFunction):
     def __cinit__(self, int dimension):
         self._dimension = dimension
 
-    cpdef double evaluate(self, double[:] individual) noexcept:
-        cdef double value = 10 * self._dimension
-
-        for i in range(self._dimension):
-            value += individual[i]**2 - 10*cos(2*pi*individual[i])
-
-        return value
+    cpdef double evaluate(self, np.ndarray individual) noexcept:
+        return (
+            10 * self._dimension +
+            individual**2 - 10*np.cos(2*np.pi*individual)
+        ).sum()
