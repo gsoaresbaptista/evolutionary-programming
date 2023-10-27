@@ -4,9 +4,6 @@ from .base_optimizer cimport PopulationBasedOptimizer
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
 
 
-np.import_array()
-
-
 cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     def __cinit__(
         self,

@@ -3,9 +3,6 @@ cimport numpy as np
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
 
 
-np.import_array()
-
-
 cdef class PopulationBasedOptimizer:
     cdef readonly np.ndarray best_individual
     cdef readonly float best_fitness

@@ -3,9 +3,6 @@ cimport numpy as np
 from numpy cimport ndarray
 
 
-np.import_array()
-
-
 ctypedef ndarray (*LossFunction)(ndarray, ndarray, bint) except *
 
 

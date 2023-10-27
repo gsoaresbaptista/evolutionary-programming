@@ -4,9 +4,6 @@ from numpy cimport ndarray
 from .activation_functions cimport softmax
 
 
-np.import_array()
-
-
 cdef dict[str, LossFunction] LOSS_FUNCTIONS = {
     'neg_log_likelihood': neg_log_likelihood,
     'softmax_neg_log_likelihood': softmax_neg_log_likelihood,

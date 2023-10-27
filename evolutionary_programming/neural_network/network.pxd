@@ -2,9 +2,6 @@ import numpy as np
 cimport numpy as np
 
 
-np.import_array()
-
-
 cdef extern from "limits.h":
     const int INT_MAX
 

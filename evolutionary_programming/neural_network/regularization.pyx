@@ -3,9 +3,6 @@ cimport numpy as np
 from numpy cimport ndarray
 
 
-np.import_array()
-
-
 cdef dict[str, RegularizationFunction] REGULARIZATION_FUNCTIONS = {
     'l1': l1_regularization,
     'l2': l2_regularization,

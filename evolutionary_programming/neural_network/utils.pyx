@@ -4,9 +4,6 @@ from numpy cimport ndarray
 from libc.math cimport ceil
 
 
-np.import_array()
-
-
 cdef dict[str, WeightInitializer] WEIGHT_INITIALIZERS = {
     'ones': ones_initializer,
     'zeros': zeros_initializer,

@@ -10,9 +10,6 @@ from .regularization cimport REGULARIZATION_FUNCTIONS, LR_DECAY_FUNCTIONS
 from .utils cimport WEIGHT_INITIALIZERS
 
 
-np.import_array()
-
-
 class NoLayersError(Exception):
     def __init__(self):
         super().__init__(

@@ -5,9 +5,6 @@ from .base_optimizer cimport PopulationBasedOptimizer
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
 
 
-np.import_array()
-
-
 cdef extern from "float.h":
     const double DBL_MAX
 

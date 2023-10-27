@@ -3,9 +3,6 @@ cimport numpy as np
 from numpy cimport ndarray
 
 
-np.import_array()
-
-
 cdef dict[str, ActivationFunction] ACTIVATION_FUNCTIONS = {
     'softmax': softmax,
     'sigmoid': sigmoid,
