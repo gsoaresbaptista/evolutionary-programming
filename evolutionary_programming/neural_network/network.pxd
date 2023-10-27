@@ -20,8 +20,10 @@ cdef class DenseLayer:
     cdef public np.ndarray _beta
 
     # hyper params
-    cdef public object _activation
-    cdef public object _regularization
+    cdef public str _activation
+    cdef public object _activation_fn
+    cdef public str _regularization
+    cdef public object _regularization_fn
     cdef public double _regularization_strength
     cdef public double _dropout_probability
     cdef public double _batch_decay
@@ -41,33 +43,50 @@ cdef class DenseLayer:
     cdef public np.ndarray _population_var
     cdef public list _batch_norm_cache
 
-
 cdef class NeuralNetwork:
     cdef public list _layers
     cdef public list _best_model
-    cdef double _learning_rate
+    cdef public double _learning_rate
+    cdef public double _lr_decay_rate
+    cdef public int _lr_decay_steps
+    cdef public double _momentum
+    cdef public int _patience
+    cdef public double _best_loss
+    cdef str _lr_decay
+    cdef str _loss_function
     cdef object _lr_decay_fn
-    cdef double _lr_decay_rate
-    cdef int _lr_decay_steps
-    cdef object _loss_function
-    cdef double _momentum
-    cdef int _patience
+    cdef object _loss_function_fn
     cdef int _waiting
-    cdef double _best_loss
+    cdef dict _initial_settings
 
     cdef np.ndarray _feedforward(self, np.ndarray x, bint training=*) except *
     cdef np.ndarray _backpropagation(self, np.ndarray y, np.ndarray y_hat) except *
+    cdef void _restore_initial_settings(self) noexcept
     cpdef void add_layer(self, layer) except *
     cpdef double evaluate(self, np.ndarray x, np.ndarray y, str loss_name=*) except *
-    cpdef void save(self, str file_path) except *
-    cpdef NeuralNetwork load(self, str file_path) except *
     cpdef np.ndarray predict(self, np.ndarray x) except *
+    cpdef void save(self, str file_path) except *
     cpdef void fit(self, np.ndarray x_train, np.ndarray y_train, np.ndarray x_val=*,
         np.ndarray y_val=*, int epochs=*, object batch_generator=*,
         int batch_size=*, int verbose=*) except *
 
+cdef np.ndarray _batch_normalization_forward(DenseLayer layer, np.ndarray x, bint training=*) except *
 
-cpdef np.ndarray batch_normalization_forward(DenseLayer layer, np.ndarray x, bint training=*) except *
+
+cdef np.ndarray _batch_normalization_backward(DenseLayer layer, np.ndarray dactivation) except *
 
 
-cpdef np.ndarray batch_normalization_backward(DenseLayer layer, np.ndarray dactivation) except *
+cpdef NeuralNetwork _rebuild_neural_network(
+    double learning_rate, str lr_decay, double lr_decay_rate, int lr_decay_steps,
+    str loss_function, double momentum, int patience, list[DenseLayer] layers
+) except *
+
+cpdef DenseLayer _rebuild_dense_layer(
+    int input_size, int output_size,
+    str activation,
+    str regularization, double regularization_strength,
+    double dropout_probability,
+    bint batch_norm,
+    double batch_decay,
+    np.ndarray weights, np.ndarray biases, np.ndarray gamma, np.ndarray beta
+) except *

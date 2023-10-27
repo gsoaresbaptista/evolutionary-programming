@@ -31,10 +31,8 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         self.best_fitness = self._individuals_fitness[0]
 
     cpdef void _fitness_compute(self, BaseFunction function) except *:
-        cdef double[:, :] individuals = self._individuals
-
         for i in range(self._n_individuals):
-            self._individuals_fitness[i] = function.evaluate(individuals[i])
+            self._individuals_fitness[i] = function.evaluate(self._individuals[i])
             # update particle best fitness
             if self._individuals_fitness[i] < self.best_fitness:
                 self.best_fitness = self._individuals_fitness[i]
