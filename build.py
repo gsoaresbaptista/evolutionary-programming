@@ -55,7 +55,7 @@ sub_packages = [
         "activation_functions", "loss_functions", "network",
         "regularization", "utils"]),
     ("data_processing", [
-        "scalers", "data_utils"]),
+        "scalers", "data_utils", "dataset"]),
 ]
 
 # check system to add openmp flag
