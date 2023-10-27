@@ -1,11 +1,16 @@
 [tool.poetry]
 name = "evolutionary-programming"
-version = "0.3.3"
+version = "0.3.4"
 description = ""
 authors = ["Gabriel Soares Baptista <gsoaresbaptista@gmail.com>"]
 readme = "README.md"
 
-build = 'build.py'
+# include cythonized files in final build
+include = ["evolutionary_programming/**/*.so"]
+
+[tool.poetry.build]
+script = "build.py"
+generate-setup-file = false
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"

@@ -15,8 +15,113 @@ np.import_array()
 
 cdef class DenseLayer:
     """
-    TESTE 2
+    A fully connected dense layer for neural networks.
+
+    This layer connects the input to the output with a set of learnable parameters
+    including weights and biases. It supports various activation functions,
+    weight initialization methods, and regularization techniques.
+
+    Parameters:
+    ----------
+    input_size : int
+        The number of input features.
+
+    output_size : int
+        The number of output units.
+
+    activation : str, optional (default: 'tanh')
+        The activation function to apply to the layer's output.
+
+    weights_init : str, optional (default: 'glorot_uniform')
+        The weight initialization method for the layer.
+
+    biases_init : str, optional (default: 'glorot_uniform')
+        The bias initialization method for the layer.
+
+    regularization : str, optional (default: 'l2')
+        The regularization technique to apply to the weights.
+
+    regularization_strength : float, optional (default: 0.0)
+        The strength of regularization applied to the weights.
+
+    dropout_probability : float, optional (default: 0.0)
+        The dropout probability to apply during training.
+
+    batch_norm : bool, optional (default: False)
+        Whether to use batch normalization.
+
+    batch_decay : float, optional (default: 0.9)
+        The decay rate for updating batch normalization statistics.
+
+    Attributes:
+    ----------
+    _weights : ndarray
+        The weights of the layer.
+
+    _biases : ndarray
+        The biases of the layer.
+
+    _gamma : ndarray
+        The gamma parameter for batch normalization.
+
+    _beta : ndarray
+        The beta parameter for batch normalization.
+
+    _activation : function
+        The activation function applied to the layer's output.
+
+    _regularization : function
+        The regularization function applied to the weights.
+
+    _regularization_strength : float
+        The strength of regularization applied to the weights.
+
+    _dropout_probability : float
+        The dropout probability applied during training.
+
+    _batch_norm : bool
+        Whether batch normalization is enabled.
+
+    _batch_decay : float
+        The decay rate for updating batch normalization statistics.
+
+    _input : ndarray
+        The input data to the layer.
+
+    _dropout_mask : ndarray
+        The dropout mask applied during training.
+
+    _activation_input : ndarray
+        The input to the activation function.
+
+    _activation_output : ndarray
+        The output of the activation function.
+
+    _dweights : ndarray
+        The gradients with respect to weights.
+
+    _dbias : ndarray
+        The gradients with respect to biases.
+
+    _dgamma : ndarray
+        The gradients with respect to gamma (batch normalization).
+
+    _dbeta : ndarray
+        The gradients with respect to beta (batch normalization).
+
+    _prev_dweights : ndarray
+        The previous gradients with respect to weights (for momentum-based optimizers).
+
+    _population_mean : ndarray
+        The population mean for batch normalization.
+
+    _population_var : ndarray
+        The population variance for batch normalization.
+
+    _batch_norm_cache : list
+        Cache for batch normalization values during forward and backward passes.
     """
+
     def __init__(
         self,
         int input_size,

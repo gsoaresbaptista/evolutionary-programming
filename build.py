@@ -37,10 +37,6 @@ CYTHONIZE_OPTIONS = {
     "embedsignature": True,
 }
 
-EXTENSIONS_DIRECTIVES = {
-    "embedsignature": True,
-}
-
 # assume that the build_ext.py script is in the root directory of the package
 root_path = pathlib.Path(__file__).absolute().parent
 
@@ -71,7 +67,6 @@ list_of_ext = [
         include_dirs=[numpy.get_include()],
         libraries=["m"],  # Unix-like specific
         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
-        cython_directives=EXTENSIONS_DIRECTIVES,
     )
     for subpackage_name, pyx_files in sub_packages
     for pyx_file in pyx_files
