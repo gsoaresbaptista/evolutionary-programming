@@ -54,6 +54,8 @@ sub_packages = [
     ("neural_network", [
         "activation_functions", "loss_functions", "network",
         "regularization", "utils"]),
+    ("data_processing", [
+        "scalers"]),
 ]
 
 # check system to add openmp flag
