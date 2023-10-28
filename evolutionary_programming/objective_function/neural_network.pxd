@@ -13,7 +13,7 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
     cpdef double evaluate(self, np.ndarray individual) noexcept
 
 
-cdef class R2Score(BaseFunction):
+cdef class R2ScoreForNN(BaseFunction):
     cdef np.ndarray _x_data
     cdef np.ndarray _y_data
     cdef list[tuple] _decode_guide

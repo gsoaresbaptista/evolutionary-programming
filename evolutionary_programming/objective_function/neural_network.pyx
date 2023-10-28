@@ -49,7 +49,7 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
         return error
 
 
-cdef class R2Score(BaseFunction):
+cdef class R2ScoreForNN(BaseFunction):
     def __init__(
         self,
         np.ndarray x_data,
