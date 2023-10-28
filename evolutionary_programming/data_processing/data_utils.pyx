@@ -13,11 +13,13 @@ cdef bint is_float(str string) noexcept:
 
 
 cdef string_to_csv_and_numpy(
-    str input_string, str delimiter=",", bint header=True
+    str input_string, str delimiter=",", bint header=True, int skiprows=0
 ) noexcept:
     reader = csv.reader(input_string.splitlines(), delimiter=delimiter)
 
-    # read the header separately
+    # processing of the first lines
+    for _ in range(skiprows):
+        next(reader)
     headers = next(reader)
     columns = [[] for _ in headers]
 
@@ -31,19 +33,24 @@ cdef string_to_csv_and_numpy(
             columns[i].insert(0, value)
 
     # convert the collected columns to numpy arrays
-    columns = [np.array(col, dtype=np.float64 if is_float(col[0]) else str)
-        for col in columns]
+    for i in range(len(columns)):
+        dtype = np.float64 if is_float(columns[i][0]) else str
+        array = np.array(columns[i], dtype=dtype)
+        # fix matrix dimensions (change dimension size from 0 to 1)
+        if array.ndim == 1:
+            array = array[..., np.newaxis]
+        columns[i] = array
 
     if header:
-        return [np.array(headers, dtype=str), *columns]
-    
+        columns.insert(0, headers)
+
     return columns
 
 
-# TODO: add skiprows
+
 cpdef list[np.ndarray] fetch_csv_to_numpy(
-    str csv_url, list[int] columns=list(),
-    str delimiter=",", bint header=True
+    str csv_url, list[int] columns=list(), str delimiter=",", bint header=True,
+    int skiprows=0,
 ) except *:
     # check if the URL is for a csv extension file
     if not csv_url.endswith('.csv'):
@@ -60,19 +67,19 @@ cpdef list[np.ndarray] fetch_csv_to_numpy(
     except requests.exceptions.RequestException as error:
         print(f"Failed to fetch to url: {csv_url}.\n{error}")
 
-    arrays = string_to_csv_and_numpy(response.text, delimiter, header)
+    arrays = string_to_csv_and_numpy(response.text, delimiter, header, skiprows)
 
     # fix the column list so that it works with headers
     if header:
-        headers = [col for i, col in enumerate(arrays[0]) if i in columns]
-        columns = [col + 1 for col in columns]
+        headers = [column for i, column in enumerate(arrays[0])
+                   if (i in columns or not columns)]
+        columns = [column + 1 for column in columns]
     else:
         headers = []
 
     # return only requested columns
-    if not columns:
-        return arrays
-    else:
+    if columns:
         data = [column for i, column in enumerate(arrays) if i in columns]
-        return [headers, *data]
+
+    return [headers, *data]
 
