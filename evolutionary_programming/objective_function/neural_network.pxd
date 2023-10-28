@@ -8,5 +8,6 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
     cdef np.ndarray _y_data
     cdef list[tuple] _decode_guide
     cdef double _l2_regularization
+    cdef np.ndarray _mask
 
     cpdef double evaluate(self, np.ndarray individual) noexcept

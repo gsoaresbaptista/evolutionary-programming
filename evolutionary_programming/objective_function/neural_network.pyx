@@ -18,6 +18,19 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
         self._decode_guide = decode_guide
         self._l2_regularization = l2_regularization
 
+        # build mask to apply regularization only to weights
+        mask = []
+
+        for weight, bias, _ in decode_guide:
+            weights = weight[0] * weight[1]
+            biases = bias[0] * bias[1]
+            mask.extend(
+                [True for _ in range(weights)] +
+                [False for _ in range(biases)]
+            )
+
+        self._mask = np.array(mask, dtype=bool)
+
     cpdef double evaluate(self, np.ndarray individual) noexcept:
         # decode network
         nn = decode_neural_network(individual, self._decode_guide)
@@ -30,7 +43,7 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
 
         # compute error
         error = np.sqrt(np.mean((y_hat - self._y_data) ** 2))
-        weights = [layer._weights.squeeze()**2 for layer in nn._layers]
-        error += self._l2_regularization * np.sum([w.sum() for w in weights])
+        if self._l2_regularization > 0:
+            error += self._l2_regularization * np.sum(individual[self._mask]**2)
 
         return error
