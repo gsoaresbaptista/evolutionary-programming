@@ -51,7 +51,6 @@ def test_neural_network_minimizing_loss(
     module: NeuralNetwork, x: np.ndarray, y: np.ndarray
 ):
     loss_before = module.evaluate(x, y)
-    assert True
     module.fit(x, y, epochs=100, verbose=101)
     loss_after = module.evaluate(x, y)
 
