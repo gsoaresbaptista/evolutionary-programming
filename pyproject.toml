@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evolutionary-programming"
-version = "0.4.4"
+version = "0.4.5"
 description = ""
 authors = ["Gabriel Soares Baptista <gsoaresbaptista@gmail.com>"]
 readme = "README.md"
