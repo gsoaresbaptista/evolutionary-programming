@@ -10,7 +10,7 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
     cdef double _l2_regularization
     cdef np.ndarray _mask
 
-    cpdef double evaluate(self, np.ndarray individual) noexcept
+    cpdef double evaluate(self, np.ndarray individual) except *
 
 
 cdef class R2ScoreForNN(BaseFunction):
@@ -20,4 +20,4 @@ cdef class R2ScoreForNN(BaseFunction):
     cdef double _l2_regularization
     cdef np.ndarray _mask
 
-    cpdef double evaluate(self, np.ndarray individual) noexcept
+    cpdef double evaluate(self, np.ndarray individual) except *

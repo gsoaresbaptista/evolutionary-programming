@@ -31,7 +31,7 @@ cdef class RootMeanSquaredErrorForNN(BaseFunction):
 
         self._mask = np.array(mask, dtype=bool)
 
-    cpdef double evaluate(self, np.ndarray individual) noexcept:
+    cpdef double evaluate(self, np.ndarray individual) except *:
         # decode network
         nn = decode_neural_network(individual, self._decode_guide)
 
@@ -76,7 +76,7 @@ cdef class R2ScoreForNN(BaseFunction):
 
         self._mask = np.array(mask, dtype=bool)
 
-    cpdef double evaluate(self, np.ndarray individual) noexcept:
+    cpdef double evaluate(self, np.ndarray individual) except *:
         # decode network
         nn = decode_neural_network(individual, self._decode_guide)
 
