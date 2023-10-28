@@ -42,4 +42,14 @@ cpdef tuple[np.ndarray, np.ndarray] create_window(
         x_data.append(data[i: i + window_size])
         y_data.append(data[i + window_size])
 
-    return (np.array(x_data), np.array(y_data))
+    # convert to numpy array
+    x_np = np.array(x_data)
+    y_np = np.array(y_data)
+
+    # fix array dimensions
+    if x_np.ndim > 2:
+        x_np = x_np.squeeze()
+    if y_np.ndim > 2:
+        y_np = y_np.squeeze()
+
+    return (x_np, y_np)
