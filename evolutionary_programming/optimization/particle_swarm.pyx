@@ -5,7 +5,7 @@ from evolutionary_programming.objective_function.base_function cimport BaseFunct
 
 
 cdef class ParticleSwarm(PopulationBasedOptimizer):
-    def __cinit__(
+    def __init__(
         self,
         int n_individuals,
         int n_dims,
@@ -84,4 +84,4 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
                 self._fitness_compute(j, function)
 
-            print(f'[{i+1}] current min value: {self.best_fitness}')
+            print(f'[{i+1}] current min value: {self.best_fitness:.6f}')

@@ -4,7 +4,7 @@ from evolutionary_programming.objective_function.base_function cimport BaseFunct
 
 
 cdef class PopulationBasedOptimizer:
-    def __cinit__(
+    def __init__(
         self,
         int n_individuals,
         int n_dims,
