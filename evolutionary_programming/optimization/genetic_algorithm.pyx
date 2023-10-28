@@ -14,12 +14,14 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         int elitist_individuals = 1,
         double mutation_probability = 0.01,
         double crossover_probability = 0.80,
+        bint bounded = True,
     ):
         super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
         self._elitist_individuals = elitist_individuals
         self._mutation_probability = mutation_probability
         self._crossover_probability = crossover_probability
         self._children_shape = (self._n_individuals, self._n_dims)
+        self._bounded = bounded
         self._init_individuals()
 
     cpdef void _init_individuals(self) except *:
@@ -91,7 +93,13 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
             # create new individuals
             children = self._crossover(self._select_fathers(), self._select_fathers())
             children = self._mutation(children)
-            self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
+
+            # force bounds
+            if self._bounded:
+                self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
+            else:
+                self._individuals = children
+
             self._fitness_compute(function)
 
             # copy the best n individuals to the next gen (elitism)
@@ -103,3 +111,4 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
             self._old_best_indices = self._best_indices.copy()
 
             print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
+        print()

@@ -16,6 +16,7 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
         double inertia = 0.8,
         int max_stagnation_interval = 5,
         double scaling_factor = 1.1,
+        bint bounded = True,
     ):
         super().__init__(n_individuals, n_dims, min_bounds, max_bounds)
         self._cognitive = cognitive
@@ -24,6 +25,7 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
         self._max_stagnation_interval = max_stagnation_interval
         self._scaling_factor = scaling_factor
         self._cj = np.random.random()
+        self._bounded = bounded
         self._init_individuals()
 
     cpdef void _init_individuals(self) except *:
@@ -71,17 +73,21 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
                         self._social * np.random.random(self._n_dims) * (g_best - position)
                     
                     # update position
-                    self._individuals[j][0] = np.clip(
-                        self._individuals[j][0] + self._individuals[j][2],
-                        self._min_bounds, self._max_bounds)
+                    self._individuals[j][0] = self._individuals[j][0] + self._individuals[j][2]
                 else:
                     # chaotic jump update
                     self._individuals[j][5] = 0
                     self._cj = 4*self._cj*(1 - self._cj)
+                    self._individuals[j][0] = self._individuals[j][3] * (1 + 1.1 * (2*self._cj - 1))
+
+                # force bounds
+                if self._bounded:
                     self._individuals[j][0] = np.clip(
-                        self._individuals[j][3] * (1 + 1.1 * (2*self._cj - 1)),
-                        self._min_bounds, self._max_bounds)
+                        self._individuals[j][0], self._min_bounds, self._max_bounds)
+                else:
+                    self._individuals[j][0] = self._individuals[j][0]
 
                 self._fitness_compute(j, function)
 
             print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
+        print()
