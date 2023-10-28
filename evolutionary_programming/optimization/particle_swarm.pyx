@@ -84,4 +84,4 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
                 self._fitness_compute(j, function)
 
-            print(f'[{i+1}] current min value: {self.best_fitness:.6f}')
+            print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')

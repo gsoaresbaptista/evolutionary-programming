@@ -102,4 +102,4 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
             self._old_individuals = self._individuals.copy()
             self._old_best_indices = self._best_indices.copy()
 
-            print(f'[{i+1}] current min value: {self.best_fitness:.6f}')
+            print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
