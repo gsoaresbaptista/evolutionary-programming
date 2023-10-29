@@ -8,21 +8,24 @@ cdef class BaseScaler:
     cpdef BaseScaler fit(self, np.ndarray data) except *
     cpdef np.ndarray transform(self, np.ndarray data) except *
     cpdef np.ndarray fit_transform(self, np.ndarray data) except *
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *
 
 
 cdef class StandardScaler(BaseScaler):
-    cdef double _mean
-    cdef double _std
+    cdef readonly double _mean
+    cdef readonly double _std
 
     cpdef BaseScaler fit(self, np.ndarray data) except *
     cpdef np.ndarray transform(self, np.ndarray data) except *
     cpdef np.ndarray fit_transform(self, np.ndarray data) except *
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *
 
 
 cdef class MinMaxScaler(BaseScaler):
-    cdef double _min
-    cdef double _max
+    cdef readonly double _min
+    cdef readonly double _max
 
     cpdef BaseScaler fit(self, np.ndarray data) except *
     cpdef np.ndarray transform(self, np.ndarray data) except *
     cpdef np.ndarray fit_transform(self, np.ndarray data) except *
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *

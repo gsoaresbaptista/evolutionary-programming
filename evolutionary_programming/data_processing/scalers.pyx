@@ -9,6 +9,9 @@ cdef class BaseScaler:
     cpdef np.ndarray transform(self, np.ndarray data) except *:
         raise NotImplementedError
 
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *:
+        raise NotImplementedError
+
     cpdef np.ndarray fit_transform(self, np.ndarray data) except *:
         self.fit(data)
         return self.transform(data)
@@ -28,6 +31,9 @@ cdef class StandardScaler(BaseScaler):
     cpdef np.ndarray transform(self, np.ndarray data) except *:
         return (data - self._mean) / self._std
 
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *:
+        return data * self._std + self._mean
+
 
 cdef class MinMaxScaler(BaseScaler):
     def __init__(self) -> None:
@@ -42,3 +48,6 @@ cdef class MinMaxScaler(BaseScaler):
 
     cpdef np.ndarray transform(self, np.ndarray data) except *:
         return (data - self._min) / (self._max - self._min)
+
+    cpdef np.ndarray inverse_transform(self, np.ndarray data) except *:
+        return data * (self._max - self._min) + self._min
