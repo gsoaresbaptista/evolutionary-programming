@@ -48,7 +48,7 @@ cpdef NeuralNetwork decode_neural_network(
 
 
 cpdef Ensemble decode_ensemble(
-    np.ndarray weights_vector, list[tuple] decode_guide, str loss_function='mse'
+    np.ndarray weights_vector, list[tuple] decode_guide, str loss_function='rmse',
 ) except *:
     ensemble = Ensemble(loss_function=loss_function)
 

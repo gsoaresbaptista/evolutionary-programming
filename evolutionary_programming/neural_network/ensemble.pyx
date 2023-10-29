@@ -9,11 +9,12 @@ from .loss_functions cimport LOSS_FUNCTIONS
 cdef class Ensemble:
     def __cinit__(
         self,
-        str loss_function = 'mse',
-        networks=None,
+        str loss_function = 'rmse',
+        list[NeuralNetwork] networks=None,
     ):
         self._loss_function_fn = LOSS_FUNCTIONS.get(loss_function)
         self._networks = []
+        self._weights = None
         if networks is not None:
             self.add_network(networks)
 
@@ -31,11 +32,29 @@ cdef class Ensemble:
         return loss_fn(y, y_hat, derivative=False).item()
 
     cpdef np.ndarray predict(self, np.ndarray x) except *:
-        return np.mean(np.array([
-            network.predict(x) for network in self._networks]), axis=0)
+        predictions = np.array([
+            network.predict(x) for network in self._networks
+        ])
+
+        if self._weights is not None:
+            return np.average(predictions, axis=0, weights=self._weights)
+
+        return np.mean(predictions, axis=0)
 
     cpdef void save(self, str file_path) except *:
         pickle.dump(self, open(file_path, 'wb'), pickle.HIGHEST_PROTOCOL)
+
+    cpdef void update_weights(self, np.ndarray x, np.ndarray y) except *:
+        losses = np.array([
+            net.evaluate(x, y) for net in self._networks
+        ]).squeeze()
+
+        # invert the precedence using scaler min max and subsequently
+        # subtracting from one. division by one serves to force the vector
+        # sum to 1, i.e. have probability (100%)
+        losses = 1 - ((losses - losses.min()) / (losses.max() - losses.min()))
+        losses = losses / losses.sum()
+        self._weights = losses
 
     @staticmethod
     def load(file_path: str) -> Ensemble:
