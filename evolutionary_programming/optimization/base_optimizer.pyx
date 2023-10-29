@@ -29,9 +29,9 @@ cdef class PopulationBasedOptimizer:
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
         for i in range(iterations):
             self._optimize_step(function)
+            self.history.append(self.best_fitness)
             print(
-                f'[{i + 1}/{iterations}] '
+                f' [{i + 1}/{iterations}] '
                 f'current min value: {self.best_fitness:.6f}', end='\r'
             )
         print()
-        self.history.append(self.best_individual)

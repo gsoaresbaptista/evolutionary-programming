@@ -19,4 +19,3 @@ cdef class PopulationBasedOptimizer:
     cdef void _init_individuals(self) except *
     cdef void _optimize_step(self, BaseFunction function) except *
     cpdef void optimize(self, int iterations, BaseFunction function) except *
-    
