@@ -53,7 +53,7 @@ sub_packages = [
         "base_optimizer", "particle_swarm", "genetic_algorithm"]),
     ("neural_network", [
         "activation_functions", "loss_functions", "network",
-        "regularization", "utils", "coding"]),
+        "regularization", "utils", "coding", "ensemble"]),
     ("data_processing", [
         "scalers", "data_utils", "dataset"]),
 ]
