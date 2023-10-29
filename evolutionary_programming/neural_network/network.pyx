@@ -230,6 +230,18 @@ cdef class NeuralNetwork:
             )
         )
 
+    def __deepcopy__(self, memo):
+        module = NeuralNetwork(
+            self._learning_rate, self._lr_decay, self._lr_decay_rate,
+            self._lr_decay_rate,self._lr_decay_steps, self._loss_function,
+            self._momentum, self._patience,
+        )
+        module._layers = deepcopy(self._layers)
+        module._best_model = deepcopy(self._best_model)
+        module._best_loss = self._best_loss
+        module._waiting = self._waiting
+        return module
+
     cdef void _restore_initial_settings(self) noexcept:
         for attr_name, attr_value in self._initial_settings.items():
             setattr(self, attr_name, attr_value)
