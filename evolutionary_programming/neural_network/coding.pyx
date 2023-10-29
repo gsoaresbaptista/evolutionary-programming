@@ -1,6 +1,7 @@
 import numpy as np
 cimport numpy as np
 from .network cimport NeuralNetwork, DenseLayer
+from .ensemble cimport Ensemble
 
 
 cpdef tuple[np.ndarray, tuple] encode_neural_network(
@@ -44,3 +45,15 @@ cpdef NeuralNetwork decode_neural_network(
         module._layers[len(module._layers) - 1]._biases = biases
 
     return module
+
+
+cpdef Ensemble decode_ensemble(
+    np.ndarray weights_vector, list[tuple] decode_guide, str loss_function='mse'
+) except *:
+    ensemble = Ensemble(loss_function=loss_function)
+
+    for i in range(weights_vector.shape[0]):
+        module = decode_neural_network(weights_vector[i], decode_guide)
+        ensemble.add_network(module)
+
+    return ensemble

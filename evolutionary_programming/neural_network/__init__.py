@@ -1,6 +1,8 @@
 from .utils import batch_sequential
 from .network import NoLayersError, DenseLayer, NeuralNetwork
-from .coding import encode_neural_network, decode_neural_network
+from .coding import (
+    encode_neural_network, decode_neural_network, decode_ensemble)
+from .ensemble import Ensemble
 
 
 __all__ = [
@@ -10,4 +12,6 @@ __all__ = [
     'NeuralNetwork',
     'encode_neural_network',
     'decode_neural_network',
+    'decode_ensemble',
+    'Ensemble',
 ]
