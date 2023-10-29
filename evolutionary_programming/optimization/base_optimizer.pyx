@@ -15,12 +15,23 @@ cdef class PopulationBasedOptimizer:
         self._n_dims = n_dims
         self._min_bounds = min_bounds
         self._max_bounds = max_bounds
+        self.history = []
 
-    cpdef void _init_individuals(self) except *:
-        raise NotImplementedError
-
-    cpdef void optimize(self, int iterations, BaseFunction function) except *:
+    cdef void _init_individuals(self) except *:
         raise NotImplementedError
 
     cpdef np.ndarray get_population(self) except *:
         raise NotImplementedError
+
+    cdef void _optimize_step (self, BaseFunction function) except *:
+        raise NotImplementedError
+
+    cpdef void optimize(self, int iterations, BaseFunction function) except *:
+        for i in range(iterations):
+            self._optimize_step(function)
+            print(
+                f'[{i + 1}/{iterations}] '
+                f'current min value: {self.best_fitness:.6f}', end='\r'
+            )
+        print()
+        self.history.append(self.best_individual)

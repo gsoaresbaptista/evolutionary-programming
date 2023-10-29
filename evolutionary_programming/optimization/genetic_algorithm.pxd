@@ -22,9 +22,10 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     cdef list _best_indices
     cdef list _old_best_indices
 
-    cpdef void _fitness_compute(self, BaseFunction function) except  *
-    cpdef np.ndarray _select_fathers(self) except *
-    cpdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *
-    cpdef np.ndarray _mutation(self, np.ndarray children) except *
+    cdef void _fitness_compute(self, BaseFunction function) except  *
+    cdef np.ndarray _select_fathers(self) except *
+    cdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *
+    cdef np.ndarray _mutation(self, np.ndarray children) except *
+    cdef void _optimize_step(self, BaseFunction function) except *
     cpdef void optimize(self, int iterations, BaseFunction function) except *
     cpdef np.ndarray get_population(self) except *

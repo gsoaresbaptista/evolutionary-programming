@@ -24,7 +24,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         self._bounded = bounded
         self._init_individuals()
 
-    cpdef void _init_individuals(self) except *:
+    cdef void _init_individuals(self) except *:
         self._worst_indices = [(0, 0) for _ in range(self._elitist_individuals)]
         self._best_indices = [(0, DBL_MAX) for _ in range(self._elitist_individuals)]
         self._old_best_indices = self._best_indices.copy()
@@ -39,7 +39,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         self.best_individual = self._individuals[0]
         self.best_fitness = self._individuals_fitness[0]
 
-    cpdef void _fitness_compute(self, BaseFunction function) except *:
+    cdef void _fitness_compute(self, BaseFunction function) except *:
         for i in range(self._n_individuals):
             self._individuals_fitness[i] = function.evaluate(self._individuals[i])
 
@@ -59,7 +59,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
                     self._worst_indices[j] = (i, self._individuals_fitness[i])
                     break
 
-    cpdef np.ndarray _select_fathers(self) except *:
+    cdef np.ndarray _select_fathers(self) except *:
         # randomly select fathers
         fathers_0 = np.random.choice(self._n_individuals, self._n_individuals//2)
         fathers_1 = np.random.choice(self._n_individuals, self._n_individuals//2)
@@ -70,7 +70,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
             )
         ]
 
-    cpdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *:
+    cdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *:
         beta = np.random.random((self._n_individuals//2, self._n_dims))
         mask = np.random.random(self._n_individuals) < self._crossover_probability
         children = np.concatenate([fathers_a, fathers_b])
@@ -80,7 +80,7 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
         ])[mask]
         return children
 
-    cpdef np.ndarray _mutation(self, np.ndarray children) except *:
+    cdef np.ndarray _mutation(self, np.ndarray children) except *:
         mutation_mask = np.random.random(self._children_shape) <= self._mutation_probability
         mutation_values = np.random.normal(0, 1, self._children_shape)
         children = children + mutation_mask * mutation_values
@@ -88,30 +88,28 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
         self._fitness_compute(function)
+        super(GeneticAlgorithm, self).optimize(iterations, function)
 
-        for i in range(iterations):
-            # create new individuals
-            children = self._crossover(self._select_fathers(), self._select_fathers())
-            children = self._mutation(children)
+    cdef void _optimize_step(self, BaseFunction function) except *:
+        # create new individuals
+        children = self._crossover(self._select_fathers(), self._select_fathers())
+        children = self._mutation(children)
 
-            # force bounds
-            if self._bounded:
-                self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
-            else:
-                self._individuals = children
+        # force bounds
+        if self._bounded:
+            self._individuals = np.clip(children, self._min_bounds, self._max_bounds)
+        else:
+            self._individuals = children
 
-            self._fitness_compute(function)
+        self._fitness_compute(function)
 
-            # copy the best n individuals to the next gen (elitism)
-            for j in range(self._elitist_individuals):
-                best_ind = self._best_indices[j][0]
-                worst_ind = self._worst_indices[j][0]
-                self._individuals[worst_ind] = self._old_individuals[best_ind]
-            self._old_individuals = self._individuals.copy()
-            self._old_best_indices = self._best_indices.copy()
-
-            print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
-        print()
+        # copy the best n individuals to the next gen (elitism)
+        for j in range(self._elitist_individuals):
+            best_ind = self._best_indices[j][0]
+            worst_ind = self._worst_indices[j][0]
+            self._individuals[worst_ind] = self._old_individuals[best_ind]
+        self._old_individuals = self._individuals.copy()
+        self._old_best_indices = self._best_indices.copy()
 
     cpdef np.ndarray get_population(self) except *:
         return self._individuals
