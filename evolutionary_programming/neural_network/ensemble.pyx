@@ -32,7 +32,7 @@ cdef class Ensemble:
 
     cpdef np.ndarray predict(self, np.ndarray x) except *:
         return np.mean(np.array([
-            network(x) for network in self._networks]), axis=0)
+            network.predict(x) for network in self._networks]), axis=0)
 
     cpdef void save(self, str file_path) except *:
         pickle.dump(self, open(file_path, 'wb'), pickle.HIGHEST_PROTOCOL)
