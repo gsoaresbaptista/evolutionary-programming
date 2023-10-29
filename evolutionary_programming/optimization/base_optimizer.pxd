@@ -14,6 +14,9 @@ cdef class PopulationBasedOptimizer:
     cdef bint _bounded
 
     @classmethod
+    cpdef np.ndarray get_population(self) except *
+
+    @classmethod
     cpdef void _init_individuals(self) except *
 
     @classmethod

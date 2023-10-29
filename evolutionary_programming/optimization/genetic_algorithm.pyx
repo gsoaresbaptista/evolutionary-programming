@@ -112,3 +112,6 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
 
             print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
         print()
+
+    cpdef np.ndarray get_population(self) except *:
+        return self._individuals

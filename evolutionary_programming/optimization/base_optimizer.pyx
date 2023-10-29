@@ -17,7 +17,10 @@ cdef class PopulationBasedOptimizer:
         self._max_bounds = max_bounds
 
     cpdef void _init_individuals(self) except *:
-        ...
+        raise NotImplementedError
 
     cpdef void optimize(self, int iterations, BaseFunction function) except *:
-        ...
+        raise NotImplementedError
+
+    cpdef np.ndarray get_population(self) except *:
+        raise NotImplementedError

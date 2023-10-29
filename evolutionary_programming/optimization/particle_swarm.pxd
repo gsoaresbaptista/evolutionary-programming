@@ -1,3 +1,5 @@
+import numpy as np
+cimport numpy as np
 from .base_optimizer cimport PopulationBasedOptimizer
 
 from evolutionary_programming.objective_function.base_function cimport BaseFunction
@@ -19,3 +21,4 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
     cpdef void _fitness_compute(self, int i, BaseFunction function) except *
     cpdef void optimize(self, int iterations, BaseFunction function) except *
+    cpdef np.ndarray get_population(self) except *

@@ -27,3 +27,4 @@ cdef class GeneticAlgorithm(PopulationBasedOptimizer):
     cpdef np.ndarray _crossover(self, np.ndarray fathers_a, np.ndarray fathers_b) except *
     cpdef np.ndarray _mutation(self, np.ndarray children) except *
     cpdef void optimize(self, int iterations, BaseFunction function) except *
+    cpdef np.ndarray get_population(self) except *

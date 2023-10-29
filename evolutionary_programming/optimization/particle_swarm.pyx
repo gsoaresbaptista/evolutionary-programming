@@ -91,3 +91,7 @@ cdef class ParticleSwarm(PopulationBasedOptimizer):
 
             print(f'[{i+1}] current min value: {self.best_fitness:.6f}', end='\r')
         print()
+
+    cpdef np.ndarray get_population(self) except *:
+        individuals = [vec[0] for vec in self._individuals]
+        return np.vstack(individuals)
