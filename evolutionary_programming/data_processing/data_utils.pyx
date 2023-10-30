@@ -81,7 +81,8 @@ cpdef list[np.ndarray] fetch_csv_to_numpy(
     if not columns:
         return arrays
 
-    data = [column for i, column in enumerate(arrays) if i in columns]
-
-    return [headers, *data]
+    return headers + [
+        column for i, column in enumerate(arrays)
+        if i in columns
+    ]
 
