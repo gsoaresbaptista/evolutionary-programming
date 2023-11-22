@@ -5,8 +5,7 @@ from .dataset import split_train_test, create_window
 
 __all__ = [
     'BaseScaler',
-    'MinMaxScaler,'
-    'StandardScaler',
+    'MinMaxScaler,' 'StandardScaler',
     'fetch_csv_to_numpy',
     'split_train_test',
     'create_window',
