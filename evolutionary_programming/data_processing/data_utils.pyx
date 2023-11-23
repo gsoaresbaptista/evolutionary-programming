@@ -13,7 +13,7 @@ cdef bint is_float(str string) noexcept:
 
 
 cdef string_to_csv_and_numpy(
-    str input_string, str delimiter=",", bint header=True, int skiprows=0
+    str input_string, str delimiter=",", bint header=True, int skiprows=0, bint convert=True
 ) noexcept:
     reader = csv.reader(input_string.splitlines(), delimiter=delimiter)
 
@@ -34,7 +34,7 @@ cdef string_to_csv_and_numpy(
 
     # convert the collected columns to numpy arrays
     for i in range(len(columns)):
-        dtype = np.float64 if is_float(columns[i][0]) else str
+        dtype = np.float64 if (is_float(columns[i][0]) and convert) else str
         array = np.array(columns[i], dtype=dtype)
         # fix matrix dimensions (change dimension size from 0 to 1)
         if array.ndim == 1:
@@ -50,7 +50,7 @@ cdef string_to_csv_and_numpy(
 
 cpdef list[np.ndarray] fetch_csv_to_numpy(
     str csv_url, list[int] columns=list(), str delimiter=",", bint header=True,
-    int skiprows=0,
+    int skiprows=0, bint convert=True
 ) except *:
     # check if the URL is for a csv extension file
     if not csv_url.endswith('.csv'):
@@ -67,7 +67,7 @@ cpdef list[np.ndarray] fetch_csv_to_numpy(
     except requests.exceptions.RequestException as error:
         print(f"Failed to fetch to url: {csv_url}.\n{error}")
 
-    arrays = string_to_csv_and_numpy(response.text, delimiter, header, skiprows)
+    arrays = string_to_csv_and_numpy(response.text, delimiter, header, skiprows, convert)
 
     # fix the column list so that it works with headers
     if header:
